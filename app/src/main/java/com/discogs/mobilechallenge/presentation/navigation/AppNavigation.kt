@@ -6,14 +6,17 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.discogs.mobilechallenge.presentation.albums.AlbumsScreen
 import com.discogs.mobilechallenge.presentation.artistdetail.ArtistDetailScreen
 import com.discogs.mobilechallenge.presentation.search.SearchScreen
 
 object Routes {
     const val SEARCH = "search"
     const val ARTIST_DETAIL = "artistDetail/{artistId}"
+    const val ALBUMS = "albums/{artistId}"
 
     fun artistDetail(artistId: Int) = "artistDetail/$artistId"
+    fun albums(artistId: Int) = "albums/$artistId"
 }
 
 @Composable
@@ -34,9 +37,15 @@ fun AppNavigation() {
         ) {
             ArtistDetailScreen(
                 onAlbumsClick = { artistId ->
-                    navController.navigate(Routes.artistDetail(artistId))
+                    navController.navigate(Routes.albums(artistId))
                 },
             )
+        }
+        composable(
+            route = Routes.ALBUMS,
+            arguments = listOf(navArgument("artistId") { type = NavType.IntType }),
+        ) {
+            AlbumsScreen()
         }
     }
 }
