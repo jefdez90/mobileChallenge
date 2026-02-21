@@ -17,6 +17,9 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val localProperties = com.android.build.gradle.internal.cxx.configure.gradleLocalProperties(rootDir, providers)
+        buildConfigField("String", "DISCOGS_TOKEN", "\"${localProperties.getProperty("DISCOGS_TOKEN", "")}\"")
     }
 
     buildTypes {
@@ -34,6 +37,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
