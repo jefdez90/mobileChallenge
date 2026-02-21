@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.discogs.mobilechallenge.presentation.artistdetail.ArtistDetailScreen
 import com.discogs.mobilechallenge.presentation.search.SearchScreen
 
 object Routes {
@@ -31,7 +32,11 @@ fun AppNavigation() {
             route = Routes.ARTIST_DETAIL,
             arguments = listOf(navArgument("artistId") { type = NavType.IntType }),
         ) {
-            //TODO ArtistDetailScreen
+            ArtistDetailScreen(
+                onAlbumsClick = { artistId ->
+                    navController.navigate(Routes.artistDetail(artistId))
+                },
+            )
         }
     }
 }
