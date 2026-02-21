@@ -72,7 +72,6 @@ fun AlbumsContent(
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            // Panel fijo — no forma parte del scroll
             if (filterOptions.years.isNotEmpty() || filterOptions.labels.isNotEmpty()) {
                 FilterPanel(
                     filterOptions = filterOptions,
@@ -83,7 +82,6 @@ fun AlbumsContent(
                 HorizontalDivider()
             }
 
-            // Contenido scrolleable
             when {
                 lazyItems.loadState.refresh is LoadState.Loading -> {
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

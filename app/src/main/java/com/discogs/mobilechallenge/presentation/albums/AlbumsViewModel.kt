@@ -36,12 +36,12 @@ class AlbumsViewModel @Inject constructor(
     private val _filter = MutableStateFlow(AlbumFilter())
     val filter: StateFlow<AlbumFilter> = _filter.asStateFlow()
 
-    // Cacheado una sola vez: re-suscripciones comparten el mismo Pager, sin nuevas llamadas de red
+    // Cached once: re-subscriptions share the same Pager without triggering new network requests
     private val pagedAlbums: Flow<PagingData<Album>> = repository
         .getArtistAlbums(artistId)
         .cachedIn(viewModelScope)
 
-    // flatMapLatest transforma los datos ya en memoria al cambiar el filtro
+    // flatMapLatest re-applies the filter transformation over cached data on every filter change
     val albums: Flow<PagingData<Album>> = _filter
         .flatMapLatest { currentFilter ->
             pagedAlbums.map { pagingData ->
