@@ -8,6 +8,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import com.discogs.mobilechallenge.data.remote.api.DiscogsApi
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
@@ -52,4 +53,9 @@ object NetworkModule {
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+
+    @Provides
+    @Singleton
+    fun provideDiscogsApi(retrofit: Retrofit): DiscogsApi =
+        retrofit.create(DiscogsApi::class.java)
 }
