@@ -4,6 +4,7 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.discogs.mobilechallenge.data.remote.api.DiscogsApi
+import com.discogs.mobilechallenge.data.remote.paging.AlbumsPagingSource
 import com.discogs.mobilechallenge.data.remote.paging.ArtistSearchPagingSource
 import com.discogs.mobilechallenge.domain.model.Album
 import com.discogs.mobilechallenge.domain.model.Artist
@@ -32,5 +33,8 @@ class DiscogsRepositoryImpl @Inject constructor(
         api.getArtist(artistId).toArtistDetail()
 
     override fun getArtistAlbums(artistId: Int): Flow<PagingData<Album>> =
-        TODO("Implementation here")
+        Pager(
+            config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
+            pagingSourceFactory = { AlbumsPagingSource(api, artistId) },
+        ).flow
 }
