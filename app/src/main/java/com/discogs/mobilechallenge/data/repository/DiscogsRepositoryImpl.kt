@@ -3,6 +3,7 @@ package com.discogs.mobilechallenge.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.discogs.mobilechallenge.domain.repository.FilterOptionsRepository
 import com.discogs.mobilechallenge.data.remote.api.DiscogsApi
 import com.discogs.mobilechallenge.data.remote.paging.AlbumsPagingSource
 import com.discogs.mobilechallenge.data.remote.paging.ArtistSearchPagingSource
@@ -17,6 +18,7 @@ import javax.inject.Singleton
 @Singleton
 class DiscogsRepositoryImpl @Inject constructor(
     private val api: DiscogsApi,
+    private val filterOptionsRepository: FilterOptionsRepository,
 ) : DiscogsRepository {
 
     companion object {
@@ -35,6 +37,6 @@ class DiscogsRepositoryImpl @Inject constructor(
     override fun getArtistAlbums(artistId: Int): Flow<PagingData<Album>> =
         Pager(
             config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false),
-            pagingSourceFactory = { AlbumsPagingSource(api, artistId) },
+            pagingSourceFactory = { AlbumsPagingSource(api, artistId, filterOptionsRepository) },
         ).flow
 }

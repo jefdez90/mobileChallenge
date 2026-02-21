@@ -2,12 +2,14 @@ package com.discogs.mobilechallenge.data.remote.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.discogs.mobilechallenge.domain.repository.FilterOptionsRepository
 import com.discogs.mobilechallenge.data.remote.api.DiscogsApi
 import com.discogs.mobilechallenge.domain.model.Album
 
 class AlbumsPagingSource(
     private val api: DiscogsApi,
     private val artistId: Int,
+    private val filterOptionsRepository: FilterOptionsRepository,
 ) : PagingSource<Int, Album>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Album> {
@@ -17,12 +19,14 @@ class AlbumsPagingSource(
             val albums = response.releases
                 .filter { it.type == "master" && it.role == "Main" }
                 .map { release ->
+                    filterOptionsRepository.addYear(release.year)
+                    filterOptionsRepository.addLabel(release.label)
                     Album(
                         id = release.id,
                         title = release.title,
                         year = release.year ?: 0,
                         genres = emptyList(),
-                        labels = emptyList(),
+                        labels = listOfNotNull(release.label?.takeIf { it.isNotBlank() }),
                         imageUrl = release.thumb.orEmpty(),
                     )
                 }

@@ -13,6 +13,7 @@ data class ArtistReleaseItemDto(
     @SerializedName("year") val year: Int?,
     @SerializedName("type") val type: String,
     @SerializedName("role") val role: String,
+    @SerializedName("label") val label: String?,
     @SerializedName("thumb") val thumb: String?,
     @SerializedName("main_release") val mainRelease: Int?,
     @SerializedName("resource_url") val resourceUrl: String,
