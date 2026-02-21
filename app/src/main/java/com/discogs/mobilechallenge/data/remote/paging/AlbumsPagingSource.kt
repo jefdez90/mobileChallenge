@@ -17,7 +17,7 @@ class AlbumsPagingSource(
         return try {
             val response = api.getArtistReleases(artistId = artistId, page = page)
             val albums = response.releases
-                .filter { it.type == "master" && it.role == "Main" }
+                .filter { it.type == "master" && it.role == "Main" } // only albums
                 .map { release ->
                     filterOptionsRepository.addYear(release.year)
                     filterOptionsRepository.addLabel(release.label)

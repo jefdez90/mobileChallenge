@@ -5,15 +5,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.discogs.mobilechallenge.domain.repository.FilterOptionsRepository
+import androidx.paging.filter
+import com.discogs.mobilechallenge.domain.filter.AlbumFilter
 import com.discogs.mobilechallenge.domain.model.Album
 import com.discogs.mobilechallenge.domain.model.FilterOptions
 import com.discogs.mobilechallenge.domain.repository.DiscogsRepository
+import com.discogs.mobilechallenge.domain.repository.FilterOptionsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class AlbumsViewModel @Inject constructor(
     private val repository: DiscogsRepository,
@@ -25,11 +33,32 @@ class AlbumsViewModel @Inject constructor(
 
     val filterOptions: StateFlow<FilterOptions> = filterOptionsRepository.options
 
-    val albums: Flow<PagingData<Album>> = repository
+    private val _filter = MutableStateFlow(AlbumFilter())
+    val filter: StateFlow<AlbumFilter> = _filter.asStateFlow()
+
+    // Cacheado una sola vez: re-suscripciones comparten el mismo Pager, sin nuevas llamadas de red
+    private val pagedAlbums: Flow<PagingData<Album>> = repository
         .getArtistAlbums(artistId)
         .cachedIn(viewModelScope)
 
+    // flatMapLatest transforma los datos ya en memoria al cambiar el filtro
+    val albums: Flow<PagingData<Album>> = _filter
+        .flatMapLatest { currentFilter ->
+            pagedAlbums.map { pagingData ->
+                if (currentFilter.isEmpty) pagingData
+                else pagingData.filter { currentFilter.matches(it) }
+            }
+        }
+
     init {
         filterOptionsRepository.reset()
+    }
+
+    fun setFilter(filter: AlbumFilter) {
+        _filter.value = filter
+    }
+
+    fun clearFilter() {
+        _filter.value = AlbumFilter()
     }
 }
