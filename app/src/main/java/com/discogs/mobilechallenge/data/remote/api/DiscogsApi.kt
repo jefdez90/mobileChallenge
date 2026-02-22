@@ -2,6 +2,7 @@ package com.discogs.mobilechallenge.data.remote.api
 
 import com.discogs.mobilechallenge.data.remote.dto.ArtistDetailDto
 import com.discogs.mobilechallenge.data.remote.dto.ArtistReleasesDto
+import com.discogs.mobilechallenge.data.remote.dto.ReleaseDetailDto
 import com.discogs.mobilechallenge.data.remote.dto.SearchResponseDto
 import com.discogs.mobilechallenge.data.repository.DiscogsRepositoryImpl.Companion.PAGE_SIZE
 import retrofit2.http.GET
@@ -31,5 +32,10 @@ interface DiscogsApi {
         @Query("sort") sort: String = "year",
         @Query("sort_order") sortOrder: String = "desc",
     ): ArtistReleasesDto
+
+    @GET("releases/{releaseId}")
+    suspend fun getReleaseDetail(
+        @Path("releaseId") releaseId: Int,
+    ): ReleaseDetailDto
 
 }

@@ -72,7 +72,7 @@ fun AlbumsContent(
                 .fillMaxSize()
                 .padding(padding),
         ) {
-            if (filterOptions.years.isNotEmpty() || filterOptions.labels.isNotEmpty()) {
+            if (filterOptions.years.isNotEmpty() || filterOptions.labels.isNotEmpty() || filterOptions.genres.isNotEmpty()) {
                 FilterPanel(
                     filterOptions = filterOptions,
                     filter = filter,
@@ -197,6 +197,20 @@ private fun FilterPanel(
             }
         }
 
+        if (filterOptions.genres.isNotEmpty()) {
+            ChipRow(label = "Genre") {
+                filterOptions.genres.sorted().forEach { genre ->
+                    FilterChip(
+                        selected = filter.genre == genre,
+                        onClick = {
+                            onFilterChange(filter.copy(genre = if (filter.genre == genre) null else genre))
+                        },
+                        label = { Text(genre) },
+                    )
+                }
+            }
+        }
+
         if (!filter.isEmpty) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -243,6 +257,7 @@ private val previewAlbums = listOf(
 
 private val previewFilterOptions = FilterOptions(
     years = setOf(1992, 1994, 2003),
+    genres = setOf("Rock", "Latin"),
     labels = setOf("Universal", "WEA"),
 )
 

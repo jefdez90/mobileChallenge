@@ -30,6 +30,7 @@ data class ArtistReleaseItemDto(
             genres = emptyList(),
             labels = listOfNotNull(label?.takeIf { it.isNotBlank() }),
             imageUrl = thumb.orEmpty(),
+            mainReleaseId = mainRelease,
         )
     }
 }
