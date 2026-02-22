@@ -4,6 +4,8 @@ Android app that integrates with the [Discogs API](https://www.discogs.com/devel
 
 **Screens:** Search → Artist Detail → Albums (paginated, filterable by year, genre, and label)
 
+<video src="https://github.com/user-attachments/assets/28945325-add9-4579-b293-443fecde0241" controls width="320"></video>
+
 ---
 
 ## Setup
