@@ -84,26 +84,11 @@ Unit tests cover the domain and data layers:
 
 ---
 
-## Static Analysis
-
-[Detekt](https://detekt.dev) is configured for static code quality checks.
-
-```bash
-./gradlew detekt
-```
-
-Configuration lives in `detekt.yml` at the project root. The ruleset follows Detekt defaults with minor adjustments for Android/Compose conventions (relaxed `MagicNumber` for common UI constants, `TooManyFunctions` threshold raised for Composable-heavy files).
-
-Reports are generated in `build/reports/detekt/`. The HTML report (`detekt.html`) is the most readable output — open it in a browser to browse violations by rule category with file and line references. A clean run produces zero violations.
-
----
-
 ## Build Commands
 
 ```bash
 ./gradlew assembleDebug        # Build debug APK
 ./gradlew installDebug         # Build and install on connected device/emulator
 ./gradlew test                 # Run unit tests
-./gradlew detekt               # Run static analysis
 ./gradlew clean                # Clean build artifacts
 ```
