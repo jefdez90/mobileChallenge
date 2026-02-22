@@ -17,18 +17,11 @@ class AlbumsPagingSource(
         return try {
             val response = api.getArtistReleases(artistId = artistId, page = page)
             val albums = response.releases
-                .filter { it.type == "master" && it.role == "Main" } // only albums
-                .map { release ->
-                    filterOptionsRepository.addYear(release.year)
-                    filterOptionsRepository.addLabel(release.label)
-                    Album(
-                        id = release.id,
-                        title = release.title,
-                        year = release.year ?: 0,
-                        genres = emptyList(),
-                        labels = listOfNotNull(release.label?.takeIf { it.isNotBlank() }),
-                        imageUrl = release.thumb.orEmpty(),
-                    )
+                .mapNotNull { release ->
+                    release.toAlbumOrNull()?.also {
+                        filterOptionsRepository.addYear(release.year)
+                        filterOptionsRepository.addLabel(release.label)
+                    }
                 }
             LoadResult.Page(
                 data = albums,
